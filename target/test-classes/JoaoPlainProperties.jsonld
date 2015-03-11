@@ -1,0 +1,11 @@
+{
+  "@id": "http://joaodasilva.com.br/",
+  "@type": "http://schema.org/Person",
+  "http://schema.org/givenName": "Joao",
+  "http://schema.org/familyName": "da Silva",
+  "http://schema.org/birthDate": "2015-03-04",
+  "http://schema.org/homeLocation": {
+     "http://schema.org/name": "Trindade - Florianópolis - Santa Catarina - Brazil",
+     "http://schema.org/telephone": "55 48 1234 5678"  
+  }  
+}
