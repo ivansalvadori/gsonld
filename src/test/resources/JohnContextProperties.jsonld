@@ -1,0 +1,12 @@
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "name": "http://schema.org/givenName",
+    "familyName": "schema:familyName"
+  },
+  "@id": "http://john.com/",
+  "@type": "http://schema.org/Person",
+  "name": "John",
+  "familyName": "Deer",
+  "schema:birthDate": "2015-03-04"
+}
