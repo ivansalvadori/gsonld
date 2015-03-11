@@ -57,7 +57,7 @@ public class JsonLDTest {
         Map<String, String> context = new HashMap<String, String>();
         JsonLdOptions options = new JsonLdOptions();
         Object compact = JsonLdProcessor.compact(jsonObject, context, options);
-        System.out.println(JsonUtils.toPrettyString(jsonObject));
+        System.out.println(JsonUtils.toPrettyString(compact));
 
     }
 

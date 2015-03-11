@@ -1,0 +1,37 @@
+{
+  "@context": {
+    "@type": "http://schema.org/Person",
+    "residencia": "http://schema.org/homeLocation",
+    "cpf": "http://schema.org/taxID",
+    "nome": "http://schema.org/givenName",
+    "sobrenome": "http://schema.org/familyName",
+    "dataNascimento": "http://schema.org/birthDate"
+  },
+  "residencia": {
+    "localizacao": {
+      "estado": "SC",
+      "cidade": "Florianópolis",
+      "@context": {
+        "estado": "http://schema.org/addressRegion",
+        "cidade": "http://schema.org/addressLocality",
+        "@type": "http://schema.org/PostalAddress",
+        "rua": "http://schema.org/streetAddress",
+        "cep": "http://schema.org/postalCode"
+      },
+      "rua": "Rua João Pio Duarte Silva",
+      "cep": "78850-000"
+    },
+    "numeroTelefone": "55 48 1234 5678",
+    "@context": {
+      "numeroTelefone": "http://schema.org/telephone",
+      "localizacao": "http://schema.org/address",
+      "@type": "http://schema.org/Place",
+      "descricao": "http://schema.org/name"
+    },
+    "descricao": "Trindade - Florianópolis - Santa Catarina - Brazil"
+  },
+  "cpf": 12345,
+  "nome": "Joao",
+  "sobrenome": "da Silva",
+  "dataNascimento": "2015-03-04"
+}
