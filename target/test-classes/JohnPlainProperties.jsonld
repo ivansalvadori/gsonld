@@ -1,7 +1,0 @@
-{
-  "@id": "http://john.com/",
-  "@type": "http://schema.org/Person",
-  "http://schema.org/givenName": "John",
-  "http://schema.org/familyName": "Deer",
-  "http://schema.org/birthDate": "2015-03-04"
-}
