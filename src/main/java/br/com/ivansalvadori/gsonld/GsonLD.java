@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
@@ -57,16 +56,21 @@ public class GsonLD {
         return null;
     }
 
-    public <T> T fromJsonLD(String jsonld, Class<T> classOfT) throws InstantiationException, IllegalAccessException, JsonParseException, IOException, JsonLdError {
+    public <T> T fromJsonLD(String jsonld, Class<T> classOfT) {
 
-        Map<String, String> context = new HashMap<String, String>();
-        JsonLdOptions options = new JsonLdOptions();
+        try {
 
-        Object fromString = JsonUtils.fromString(jsonld);
-        Object compact = JsonLdProcessor.compact(fromString, context, options);
-        if (compact instanceof Map) {
-            Map<?, ?> jsonLDProperties = (Map<?, ?>) compact;
-            return mapJsonLDtoObject(jsonLDProperties, classOfT);
+            Map<String, String> context = new HashMap<String, String>();
+            JsonLdOptions options = new JsonLdOptions();
+
+            Object fromString = JsonUtils.fromString(jsonld);
+            Object compact = JsonLdProcessor.compact(fromString, context, options);
+            if (compact instanceof Map) {
+                Map<?, ?> jsonLDProperties = (Map<?, ?>) compact;
+                return mapJsonLDtoObject(jsonLDProperties, classOfT);
+            }
+        } catch (IOException | JsonLdError | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
 
         return null;
