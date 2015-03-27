@@ -45,7 +45,7 @@ public class GsonLD {
                     // POG applied successfully
                     jsonLdDocument.addProperties(field.getName(), innerSemanticObject.getProperties());
                 }
-                if (!field.getType().isAnnotationPresent(SemanticProperty.class)) {
+                if (field.isAnnotationPresent(SemanticProperty.class)) {
                     jsonLdDocument.addContext(field.getName(), field.getAnnotation(SemanticProperty.class).value());
                 }
 
