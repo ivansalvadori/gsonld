@@ -37,7 +37,11 @@ public class GsonLD {
             for (Field field : declaredFields) {
                 field.setAccessible(true);
                 if (!field.getType().isAnnotationPresent(SemanticClass.class)) {
-                    jsonLdDocument.addProperties(field.getName(), field.get(src));
+                    if (field.isAnnotationPresent(Id.class)) {
+                        jsonLdDocument.addProperties("@id", field.get(src));
+                    } else {
+                        jsonLdDocument.addProperties(field.getName(), field.get(src));
+                    }
                 } else if (field.getType().isAnnotationPresent(SemanticClass.class)) {
                     JsonLdDocument innerSemanticObject = serializeObject(field.get(src));
                     // POG initiate
