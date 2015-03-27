@@ -2,7 +2,9 @@ package br.com.ivansalvadori.gsonld;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +13,8 @@ import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class GsonLD {
 
@@ -26,10 +30,8 @@ public class GsonLD {
     }
 
     private JsonLdDocument serializeObject(Object src) throws IllegalArgumentException, IllegalAccessException {
-        Gson gson = new Gson();
-
+        JsonLdDocument jsonLdDocument = new JsonLdDocument();
         if (src.getClass().isAnnotationPresent(SemanticClass.class)) {
-            JsonLdDocument jsonLdDocument = new JsonLdDocument();
             String objectSemanticType = src.getClass().getAnnotation(SemanticClass.class).value();
             jsonLdDocument.addProperties("@type", objectSemanticType);
 
@@ -39,6 +41,8 @@ public class GsonLD {
                 if (!field.getType().isAnnotationPresent(SemanticClass.class)) {
                     if (field.isAnnotationPresent(Id.class)) {
                         jsonLdDocument.addProperties("@id", field.get(src));
+                    } else if (field.get(src) instanceof List<?>) {
+                        return serializeList(field.get(src), field.getName());
                     } else {
                         jsonLdDocument.addProperties(field.getName(), field.get(src));
                     }
@@ -52,11 +56,42 @@ public class GsonLD {
                 if (field.isAnnotationPresent(SemanticProperty.class)) {
                     jsonLdDocument.addContext(field.getName(), field.getAnnotation(SemanticProperty.class).value());
                 }
-
             }
 
             return jsonLdDocument;
         }
+
+        if (src instanceof List<?>) {
+            return serializeList(src, "@graph");
+        }
+
+        return null;
+    }
+
+    private JsonLdDocument serializeList(Object src, String listName) throws IllegalAccessException {
+        if (src instanceof List<?>) {
+            JsonLdDocument jsonLdDocument = new JsonLdDocument();
+            List<?> list = (List<?>) src;
+            List<JsonObject> semanticList = new ArrayList<JsonObject>();
+            for (Object object : list) {
+                JsonLdDocument serializedItem = serializeObject(object);
+
+                JsonObject jsonLd = new JsonObject();
+
+                jsonLd.add("@context", new Gson().toJsonTree(serializedItem.getContext()));
+
+                Set<String> keySet = serializedItem.getProperties().keySet();
+                for (String propertyName : keySet) {
+                    JsonElement element = new Gson().toJsonTree(serializedItem.getProperties().get(propertyName));
+                    jsonLd.add(propertyName, element);
+                }
+                semanticList.add(jsonLd);
+
+            }
+            jsonLdDocument.addProperties(listName, semanticList);
+            return jsonLdDocument;
+        }
+
         return null;
     }
 
