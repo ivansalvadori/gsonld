@@ -78,7 +78,9 @@ public class GsonLD {
 
                 JsonObject jsonLd = new JsonObject();
 
-                jsonLd.add("@context", new Gson().toJsonTree(serializedItem.getContext()));
+                if (!serializedItem.getContext().isEmpty()) {
+                    jsonLd.add("@context", new Gson().toJsonTree(serializedItem.getContext()));
+                }
 
                 Set<String> keySet = serializedItem.getProperties().keySet();
                 for (String propertyName : keySet) {
