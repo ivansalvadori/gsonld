@@ -41,9 +41,10 @@ public class JsonLdDocument {
         Gson gson = new Gson();
         JsonObject jsonLd = new JsonObject();
 
-        JsonElement contextTree = gson.toJsonTree(this.context);
-        jsonLd.add("@context", contextTree);
-
+        if (!this.context.isEmpty()) {
+            JsonElement contextTree = gson.toJsonTree(this.context);
+            jsonLd.add("@context", contextTree);
+        }
         Set<String> keySet = this.properties.keySet();
         for (String propertyName : keySet) {
             JsonElement element = gson.toJsonTree(this.properties.get(propertyName));
