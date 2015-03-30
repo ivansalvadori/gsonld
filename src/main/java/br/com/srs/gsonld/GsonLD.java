@@ -1,5 +1,6 @@
 package br.com.srs.gsonld;
 
+import java.beans.Transient;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -46,6 +47,9 @@ public class GsonLD {
             Field[] declaredFields = src.getClass().getDeclaredFields();
             for (Field field : declaredFields) {
             	if(Modifier.isStatic(field.getModifiers())){
+            		continue;
+            	}
+            	if(Modifier.isTransient(field.getModifiers())){
             		continue;
             	}
                 field.setAccessible(true);
