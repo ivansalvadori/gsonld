@@ -1,4 +1,4 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
 import java.io.InputStream;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
-import br.com.ivansalvadori.gsonld.SameAs;
-import br.com.ivansalvadori.gsonld.SemanticClass;
-import br.com.ivansalvadori.gsonld.SemanticProperty;
+import br.com.srs.gsonld.SameAs;
+import br.com.srs.gsonld.SemanticClass;
+import br.com.srs.gsonld.SemanticProperty;
 
 import com.google.gson.Gson;
 
