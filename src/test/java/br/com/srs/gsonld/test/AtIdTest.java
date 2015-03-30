@@ -1,8 +1,8 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
 import org.junit.Test;
 
-import br.com.ivansalvadori.gsonld.GsonLD;
+import br.com.srs.gsonld.GsonLD;
 
 public class AtIdTest {
 

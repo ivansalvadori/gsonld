@@ -1,8 +1,8 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
-import br.com.ivansalvadori.gsonld.SemanticClass;
-import br.com.ivansalvadori.gsonld.SemanticProperty;
-import br.com.ivansalvadori.gsonld.Vocabulary;
+import br.com.srs.gsonld.SemanticClass;
+import br.com.srs.gsonld.SemanticProperty;
+import br.com.srs.gsonld.Vocabulary;
 
 @Vocabulary(prefix="foaf", id="http://xmlns.com/foaf/0.1/")
 @SemanticClass("foaf:Company")

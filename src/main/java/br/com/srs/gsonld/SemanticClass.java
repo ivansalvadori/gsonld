@@ -1,4 +1,4 @@
-package br.com.ivansalvadori.gsonld;
+package br.com.srs.gsonld;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,12 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Vocabulary {
+public @interface SemanticClass {
 
-    String prefix();
+	String value() default "";
 
-    String id();
+	String prefix() default "";
+
+	String term() default "";
 
 }

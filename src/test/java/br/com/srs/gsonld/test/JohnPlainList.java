@@ -1,9 +1,9 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ivansalvadori.gsonld.SemanticClass;
+import br.com.srs.gsonld.SemanticClass;
 
 @SemanticClass("Collection")
 public class JohnPlainList {

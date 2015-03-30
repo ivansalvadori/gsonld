@@ -1,4 +1,4 @@
-package br.com.ivansalvadori.gsonld;
+package br.com.srs.gsonld;
 
 import java.util.HashMap;
 import java.util.Map;

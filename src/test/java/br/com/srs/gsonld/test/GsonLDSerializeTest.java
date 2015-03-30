@@ -1,4 +1,4 @@
-package br.com.ivansalvadori.gsonld.test;
+package br.com.srs.gsonld.test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import br.com.ivansalvadori.gsonld.GsonLD;
+import br.com.srs.gsonld.GsonLD;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.github.jsonldjava.core.JsonLdError;
