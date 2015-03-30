@@ -1,6 +1,5 @@
 package br.com.srs.gsonld;
 
-import java.beans.Transient;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
