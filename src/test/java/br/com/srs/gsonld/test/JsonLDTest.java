@@ -43,9 +43,6 @@ public class JsonLDTest {
     public void deveReconhecerPropriedadesEnderecoCompleto() throws Exception {
         InputStream inputStream = classLoader.getResourceAsStream("JohnPlainProperties.jsonld");
         Object jsonObject = JsonUtils.fromInputStream(inputStream);
-        Map<String, String> context = new HashMap<String, String>();
-        JsonLdOptions options = new JsonLdOptions();
-        Object compact = JsonLdProcessor.compact(jsonObject, context, options);
         System.out.println(JsonUtils.toPrettyString(jsonObject));
 
     }

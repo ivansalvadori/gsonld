@@ -1,6 +1,5 @@
 package br.com.srs.gsonld;
 
-import java.beans.Transient;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+
+import br.com.srs.gsonld.exception.NoSemanticObjectException;
 
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
@@ -28,7 +29,6 @@ public class GsonLD {
     	if(src == null){
     		return NULL_OBJECT_JSON;
     	}
-
         JsonLdDocument jsonLdDocument;
         try {
             jsonLdDocument = serializeObject(src);
@@ -39,48 +39,47 @@ public class GsonLD {
     }
 
     private JsonLdDocument serializeObject(Object src) throws IllegalArgumentException, IllegalAccessException {
-        JsonLdDocument jsonLdDocument = new JsonLdDocument();
-        if (src.getClass().isAnnotationPresent(SemanticClass.class)) {
-            String objectSemanticType = src.getClass().getAnnotation(SemanticClass.class).value();
-            jsonLdDocument.addProperties("@type", objectSemanticType);
-
-            Field[] declaredFields = src.getClass().getDeclaredFields();
-            for (Field field : declaredFields) {
-            	if(Modifier.isStatic(field.getModifiers())){
-            		continue;
-            	}
-            	if(Modifier.isTransient(field.getModifiers())){
-            		continue;
-            	}
-                field.setAccessible(true);
-                if (!field.getType().isAnnotationPresent(SemanticClass.class)) {
-                    if (field.isAnnotationPresent(Id.class)) {
-                        jsonLdDocument.addProperties("@id", field.get(src));
-                    } else if (field.get(src) instanceof List<?>) {
-                        return serializeList(field.get(src), field.getName());
-                    } else {
-                        jsonLdDocument.addProperties(field.getName(), field.get(src));
-                    }
-                } else if (field.getType().isAnnotationPresent(SemanticClass.class)) {
-                    JsonLdDocument innerSemanticObject = serializeObject(field.get(src));
-                    // POG initiate
-                    innerSemanticObject.addProperties("@context", innerSemanticObject.getContext());
-                    // POG applied successfully
-                    jsonLdDocument.addProperties(field.getName(), innerSemanticObject.getProperties());
-                }
-                if (field.isAnnotationPresent(SemanticProperty.class)) {
-                    jsonLdDocument.addContext(field.getName(), field.getAnnotation(SemanticProperty.class).value());
-                }
-            }
-
-            return jsonLdDocument;
-        }
-
         if (src instanceof List<?>) {
-            return serializeList(src, "@graph");
+        	return serializeList(src, "@graph");
+        }
+        if(!src.getClass().isAnnotationPresent(SemanticClass.class)){
+        	throw new NoSemanticObjectException(src);
+        }
+        JsonLdDocument jsonLdDocument = new JsonLdDocument();
+        String objectSemanticType = src.getClass().getAnnotation(SemanticClass.class).value();
+        jsonLdDocument.addProperties("@type", objectSemanticType);
+
+        Field[] declaredFields = src.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+        	if(Modifier.isStatic(field.getModifiers())){
+        		continue;
+        	}
+        	if(Modifier.isTransient(field.getModifiers())){
+        		continue;
+        	}
+            field.setAccessible(true);
+            boolean isSemanticClassAnnotationPresent = field.getType().isAnnotationPresent(SemanticClass.class);
+			if (!isSemanticClassAnnotationPresent) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    jsonLdDocument.addProperties("@id", field.get(src));
+                } else if (field.get(src) instanceof List<?>) {
+                    return serializeList(field.get(src), field.getName());
+                } else {
+                    jsonLdDocument.addProperties(field.getName(), field.get(src));
+                }
+            } else if (isSemanticClassAnnotationPresent) {
+                JsonLdDocument innerSemanticObject = serializeObject(field.get(src));
+                // POG initiate
+                innerSemanticObject.addProperties("@context", innerSemanticObject.getContext());
+                // POG applied successfully
+                jsonLdDocument.addProperties(field.getName(), innerSemanticObject.getProperties());
+            }
+            if (field.isAnnotationPresent(SemanticProperty.class)) {
+                jsonLdDocument.addContext(field.getName(), field.getAnnotation(SemanticProperty.class).value());
+            }
         }
 
-        return null;
+        return jsonLdDocument;
     }
 
     private JsonLdDocument serializeList(Object src, String listName) throws IllegalAccessException {

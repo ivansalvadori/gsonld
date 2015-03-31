@@ -2,16 +2,12 @@ package br.com.srs.gsonld.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
 import br.com.srs.gsonld.GsonLD;
 
 import com.github.jsonldjava.core.JsonLdError;
-import com.github.jsonldjava.core.JsonLdOptions;
-import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 
 public class GsonLDTest {
@@ -52,11 +48,7 @@ public class GsonLDTest {
     private String getSampleFileAsString(String filename) throws IOException, JsonLdError {
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
         Object jsonObject = JsonUtils.fromInputStream(inputStream);
-        Map<String, String> context = new HashMap<String, String>();
-        JsonLdOptions options = new JsonLdOptions();
-        Object compact = JsonLdProcessor.compact(jsonObject, context, options);
-        String jsonLD = JsonUtils.toPrettyString(jsonObject);
-        return jsonLD;
+        return JsonUtils.toPrettyString(jsonObject);
     }
 
 }
