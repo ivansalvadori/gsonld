@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class JsonLdDocument {
 
     @SerializedName("@context")
-    private final Map<String, String> context = new HashMap<String, String>();
+    private final Map<String, Object> context = new HashMap<String, Object>();
 
     private final Map<String, Object> properties = new HashMap<String, Object>();
 
@@ -24,11 +24,11 @@ public class JsonLdDocument {
         this.properties.put(propertyName, value);
     }
 
-    public Map<String, String> getContext() {
-        return new HashMap<String, String>(this.context);
+    public Map<String, Object> getContext() {
+        return new HashMap<String, Object>(this.context);
     }
 
-    public void addContext(String contextName, String contextValue) {
+    public void addContext(String contextName, Object contextValue) {
         this.context.put(contextName, contextValue);
     }
 

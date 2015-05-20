@@ -1,6 +1,5 @@
 package br.com.srs.gsonld;
 
-import java.beans.Transient;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,16 +21,19 @@ import com.google.gson.JsonObject;
 
 public class GsonLD {
 
-	private static final String NULL_OBJECT_JSON = "null";
-	
+    private static final String NULL_OBJECT_JSON = "null";
+
     public String toJsonLD(Object src) {
-    	if(src == null){
-    		return NULL_OBJECT_JSON;
-    	}
+        if (src == null) {
+            return NULL_OBJECT_JSON;
+        }
 
         JsonLdDocument jsonLdDocument;
         try {
             jsonLdDocument = serializeObject(src);
+            if (jsonLdDocument == null) {
+                return NULL_OBJECT_JSON;
+            }
             return jsonLdDocument.toString();
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -46,12 +48,12 @@ public class GsonLD {
 
             Field[] declaredFields = src.getClass().getDeclaredFields();
             for (Field field : declaredFields) {
-            	if(Modifier.isStatic(field.getModifiers())){
-            		continue;
-            	}
-            	if(Modifier.isTransient(field.getModifiers())){
-            		continue;
-            	}
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+                if (Modifier.isTransient(field.getModifiers())) {
+                    continue;
+                }
                 field.setAccessible(true);
                 if (!field.getType().isAnnotationPresent(SemanticClass.class)) {
                     if (field.isAnnotationPresent(Id.class)) {
@@ -70,6 +72,14 @@ public class GsonLD {
                 }
                 if (field.isAnnotationPresent(SemanticProperty.class)) {
                     jsonLdDocument.addContext(field.getName(), field.getAnnotation(SemanticProperty.class).value());
+                }
+                if (field.isAnnotationPresent(Link.class)) {
+                    Map<String, String> linkDetails = new HashMap<String, String>();
+                    if (field.isAnnotationPresent(SemanticProperty.class)) {
+                        linkDetails.put("@id", field.getAnnotation(SemanticProperty.class).value());
+                    }
+                    linkDetails.put("@type", "@id");
+                    jsonLdDocument.addContext(field.getName(), linkDetails);
                 }
             }
 
@@ -113,10 +123,11 @@ public class GsonLD {
     }
 
     public <T> T fromJsonLD(String jsonld, Class<T> classOfT) {
-    	//if the JSON value is null, instead of an empty object, we return a null value.
-    	if(StringUtils.equalsIgnoreCase(NULL_OBJECT_JSON, jsonld)){
-    		return null;
-    	}
+        // if the JSON value is null, instead of an empty object, we return a
+        // null value.
+        if (StringUtils.equalsIgnoreCase(NULL_OBJECT_JSON, jsonld)) {
+            return null;
+        }
         try {
             Map<String, String> context = new HashMap<String, String>();
             JsonLdOptions options = new JsonLdOptions();
